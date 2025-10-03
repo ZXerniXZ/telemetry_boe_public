@@ -21,7 +21,7 @@ from concurrent.futures import ThreadPoolExecutor
 import nmap
 import logging
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from paho.mqtt import client as mqtt
 from pydantic import BaseModel, EmailStr
@@ -86,6 +86,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Health endpoint semplice per healthcheck Docker
+@app.get("/health")
+def health() -> str:
+    return "healthy"
 
 # Configurazione ambiente
 SCAN_SUBNET = os.environ.get("SCAN_SUBNET", "10.8.0.0/24")
